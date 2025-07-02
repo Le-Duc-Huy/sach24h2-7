@@ -1,7 +1,9 @@
 <?php
 include 'includes/db.php';
 include 'includes/header.php';
+
 ?>
+
 
 <h2 style="text-align: center;">📚 Danh sách truyện đã gửi</h2>
 
@@ -15,6 +17,8 @@ include 'includes/header.php';
             <th>Nội dung</th>
             <th>File</th>
             <th>Thời gian gửi</th>
+            <th>Hành động</th>
+
         </tr>
     </thead>
     <tbody>
@@ -36,6 +40,13 @@ include 'includes/header.php';
                 <?php endif; ?>
             </td>
             <td><?= $row['submitted_at'] ?></td>
+            <td>
+                <a href="approve_submission.php?id=<?= $row['id'] ?>"
+                    onclick="return confirm('Bạn chắc chắn muốn duyệt?')">✅ Duyệt</a> |
+                <a href="delete_submission.php?id=<?= $row['id'] ?>" onclick="return confirm('Xóa bài này?')">🗑️
+                    Xóa</a>
+            </td>
+
         </tr>
         <?php endwhile; ?>
     </tbody>

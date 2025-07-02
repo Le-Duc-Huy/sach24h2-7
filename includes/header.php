@@ -25,12 +25,22 @@ if (session_status() === PHP_SESSION_NONE) {
                 <a href="index.php">Trang chủ</a>
                 <a href="library.php">Thư viện sách</a>
                 <a href="send_story.php">Đăng tải truyện </a>
-                <a href="Latest_story.php">Lịch sử đăng truyện</a>
+
                 <a href="contact.php">Liên hệ</a>
+                <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+                <a href="Latest_story.php" class="admin-link"> Quản lý truyện</a>
+                <?php endif; ?>
+
             </nav>
+            <?php if (isset($_SESSION['user'])): ?>
+            <p style="margin-right: 20px;">
+                👤 Xin chào <b><?= htmlspecialchars($_SESSION['user']) ?></b>
+                (vai trò: <b><?= $_SESSION['role'] ?></b>)
+            </p>
+            <?php endif; ?>
 
             <!-- Đăng nhập -->
-                      <?php if (isset($_SESSION['user'])): ?>
+            <?php if (isset($_SESSION['user'])): ?>
             <a href="logout.php"
                 style="background-color: #28a745; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none;">Đăng
                 xuất</a>

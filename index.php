@@ -116,29 +116,48 @@ echo "<p><span style='color:gold'>⭐ {$avg_rating} / 5</span> ";
     <h2 style="margin-top: 50px;">Tổng Hợp Sách Hay</h2>
     <div class="book-columns">
         <?php
-        $types = [
-            'new' => 'Truyện mới',
-            'suggested' => 'Đề cử',
-            'best' => 'Sách hay'
-        ];
+    $types = [
+        'new' => 'Truyện mới',
+        'suggested' => 'Đề cử',
+        'best' => 'Sách hay'
+    ];
 
-        foreach ($types as $type => $title) {
-            echo "<div class='book-column'>";
-            echo "<h3>$title</h3><ul class='book-list-with-thumb'>";
+    foreach ($types as $type => $title) {
+        echo "<div class='book-column' style='max-height: 400px; overflow-y: auto; padding-right: 8px;'>";
+        echo "<h3>$title</h3><ul class='book-list-with-thumb'>";
 
-            $res = $conn->query("SELECT * FROM books WHERE category_type = '{$type}' ORDER BY id DESC LIMIT 10");
-            while ($book = $res->fetch_assoc()) {
-                $link = ($book['require_login'] && !isset($_SESSION['user_id'])) ? 'login.php' : 'book.php?id=' . $book['id'];
-                echo "<li><a href='{$link}'><img src='assets/images/{$book['image']}' style='width:60px;height:90px; margin-right:10px; float:left;'></a>";
-                echo "<div><strong><a href='{$link}'>{$book['title']}</a></strong><br>";
-                echo "<span>📖 {$book['category']} • <em>{$book['author']}</em></span><br>";
-                echo "⭐ {$book['rating']}/10</div><div style='clear:both'></div></li>";
-            }
-
-            echo "</ul></div>";
+        $res = $conn->query("SELECT * FROM books WHERE category_type = '{$type}' ORDER BY id DESC LIMIT 10");
+        while ($book = $res->fetch_assoc()) {
+            $link = ($book['require_login'] && !isset($_SESSION['user_id'])) ? 'login.php' : 'book.php?id=' . $book['id'];
+            echo "<li><a href='{$link}'><img src='assets/images/{$book['image']}' style='width:60px;height:90px; margin-right:10px; float:left;'></a>";
+            echo "<div><strong><a href='{$link}'>{$book['title']}</a></strong><br>";
+            echo "<span>📖 {$book['category']} • <em>{$book['author']}</em></span><br>";
+            echo "⭐ {$book['rating']}/10</div><div style='clear:both'></div></li>";
         }
-        ?>
+
+        echo "</ul></div>";
+    }
+    ?>
     </div>
+
+    <h2 style="margin-top: 50px;">Tác phẩm cộng đồng</h2>
+    <div class="book-list" style="max-height: 400px; overflow-y: scroll; padding-right: 10px;">
+        <?php
+    $result = $conn->query("SELECT * FROM submissions WHERE approved = 1 ORDER BY submitted_at DESC");
+    while ($row = $result->fetch_assoc()) {
+        echo "<div class='book'>";
+        echo "<h3>" . htmlspecialchars($row['title']) . "</h3>";
+        echo "<p><i class='fa fa-user'></i> " . htmlspecialchars($row['name']) . " - <i class='fa fa-calendar'></i> " . date('d/m/Y', strtotime($row['submitted_at'])) . "</p>";
+        echo "<p>" . htmlspecialchars(substr($row['content'], 0, 100)) . "...</p>";
+        if (!empty($row['attachment'])) {
+            echo "<p><a href='uploads/{$row['attachment']}' target='_blank'>📎 Xem file đính kèm</a></p>";
+        }
+        echo "</div>";
+    }
+    ?>
+    </div>
+
+
 
     <!-- Footer mini -->
     <div
