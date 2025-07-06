@@ -10,6 +10,7 @@ if (session_status() === PHP_SESSION_NONE) {
     <meta charset="UTF-8">
     <title>sach24h - Đọc sách online miễn phí</title>
     <link rel="stylesheet" href="assets/css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -22,13 +23,15 @@ if (session_status() === PHP_SESSION_NONE) {
 
             <!-- Menu -->
             <nav style="display: flex; gap: 30px;">
-                <a href="index.php">Trang chủ</a>
-                <a href="library.php">Thư viện sách</a>
-                <a href="send_story.php">Đăng tải truyện </a>
+                <a href="index.php">Trang Chủ</a>
+                <a href="library.php">Thư Viện Sách</a>
+                <a href="send_story.php">Đăng Tải Sách</a>
+                <a href="history.php">Lịch Sử</a>
 
-                <a href="contact.php">Liên hệ</a>
+                <a href="contact.php">Liên Hệ</a>
+
                 <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
-                <a href="Latest_story.php" class="admin-link"> Quản lý truyện</a>
+                <a href="Latest_story.php" class="admin-link"> Quản Lý Sách</a>
                 <?php endif; ?>
 
             </nav>
@@ -49,7 +52,6 @@ if (session_status() === PHP_SESSION_NONE) {
                 style="background-color: #28a745; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none;">Đăng
                 nhập</a>
             <?php endif; ?>
-
-
         </div>
+
     </header>

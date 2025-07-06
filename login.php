@@ -6,7 +6,10 @@
                 style="height: 24px; vertical-align: middle; margin-right: 5px;"> Đăng nhập
         </h2>
 
-        <form action="process_login.php" method="POST">
+        <form
+            action="process_login.php<?php echo isset($_GET['redirect']) ? '?redirect=' . urlencode($_GET['redirect']) : ''; ?>"
+            method="POST">
+
             <input type="text" name="username" placeholder="Tên đăng nhập" required>
             <input type="password" name="password" placeholder="Mật khẩu" required>
 
@@ -19,4 +22,3 @@
     </div>
 </div>
 <?php include 'includes/footer.php'; ?>
-

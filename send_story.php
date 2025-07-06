@@ -1,8 +1,11 @@
 <?php
-
 include 'includes/header.php';
 
-
+if (!isset($_SESSION['user_id'])) {
+    // Nếu chưa đăng nhập thì chuyển về trang login
+    echo "<script>alert('⚠️ Vui lòng đăng nhập trước khi gửi truyện'); window.location.href = 'login.php';</script>";
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -136,7 +139,8 @@ include 'includes/header.php';
             </div>
             <div class="mb-3">
                 <label class="form-label">Đính kèm file (PDF/Docx)</label>
-                <input type="file" name="file" class="form-control">
+                <input type="file" name="attachment" class="form-control" required>
+
             </div>
             <div class="text-center">
                 <button type="submit" class="btn btn-primary">Gửi truyện 📤</button>

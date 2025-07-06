@@ -1,6 +1,4 @@
 <?php
-session_start(); // ⚠️ Thêm dòng này để dùng $_SESSION
-
 include 'includes/db.php';
 include 'includes/header.php';
 

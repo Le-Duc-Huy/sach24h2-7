@@ -5,6 +5,14 @@ include 'includes/db.php';
 
 // Xử lý gửi đánh giá
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_review'])) {
+    if (!isset($_SESSION['user_id'])) {
+        // Chuyển sang trang đăng nhập và quay lại book.php sau khi đăng nhập
+        $redirect_url = 'login.php?redirect=book.php?id=' . urlencode($_GET['id']);
+        header("Location: $redirect_url");
+        exit;
+    }
+
+
     $book_id = (int)$_GET['id'];
     $rating = (int)$_POST['rating'];
     $comment = trim($_POST['comment']);
@@ -51,6 +59,26 @@ $update_stmt->close();
         echo "<p><strong>Mô tả:</strong><br>" . nl2br(htmlspecialchars($row['description'])) . "</p>";
         echo "</div></div>";
 
+// Hiển thị 3 nút hành động
+echo "<div style='margin-top: 20px; display: flex; gap: 10px;'>";
+
+echo "<a href='read.php?book_id=" . $row['id'] . "' 
+        style='background-color: #8bc34a; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: bold; display: inline-flex; align-items: center; gap: 6px;'>
+        <i class='fa-solid fa-book'></i> Đọc từ đầu
+      </a>";
+
+echo "<a href='follow.php?book_id=" . $row['id'] . "' 
+        style='background-color: #ff4f72; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: bold; display: inline-flex; align-items: center; gap: 6px;'>
+        <i class='fa-solid fa-heart'></i> Theo dõi
+      </a>";
+
+echo "<a href='like.php?book_id=" . $row['id'] . "' 
+        style='background-color: #cc00ff; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: bold; display: inline-flex; align-items: center; gap: 6px;'>
+        <i class='fa-solid fa-thumbs-up'></i> Thích
+      </a>";
+
+echo "</div>";
+
         // Hiển thị đánh giá
         $rating_stmt = $conn->prepare("SELECT AVG(rating) AS avg_rating, COUNT(*) AS total_reviews FROM book_reviews WHERE book_id = ?");
         $rating_stmt->bind_param("i", $book_id);
@@ -67,7 +95,7 @@ $update_stmt->close();
         $comment_result = $comment_stmt->get_result();
 
   echo "<h4>🗨️ Bình luận</h4>";
-echo "<div style='max-height: 250px; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none; border: 1px solid #ddd; padding: 10px; background:rgb(240, 169, 220); border-radius: 20px; margin-bottom: 20px;'>
+echo "<div style='max-height: 250px; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none; border: 1px solid #ddd; padding: 10px; background:rgb(240, 169, 220); border-radius: 20px; margin-bottom: 20px; margin-left:2px'>
 <style>
     div::-webkit-scrollbar {
         display: none;
@@ -90,8 +118,9 @@ echo "</div>"; // Đóng div scroll
 echo "</div>"; // Đóng div scroll
 
         // Form gửi đánh giá
-        echo '
-        <h4>📩 Gửi đánh giá của bạn</h4>
+       echo '
+    <h4>📩 Gửi đánh giá của bạn</h4>
+    <div style="padding: 20px; background: rgba(255, 255, 255, 0.7); border-radius: 12px; max-width: 600px; margin: 20px; border: 1px solid #ccc;">
         <form method="POST" action="">
             <label>Số sao (1 - 5):</label><br>
             <select name="rating" required>
@@ -107,7 +136,8 @@ echo "</div>"; // Đóng div scroll
             <textarea name="comment" rows="4" cols="40" required></textarea><br><br>
 
             <button type="submit" name="submit_review">Gửi đánh giá</button>
-        </form>';
+        </form>
+    </div>';
 
         // Danh sách chương
         $chapter_stmt = $conn->prepare("SELECT id, chapter_title FROM chapters WHERE book_id = ? ORDER BY id ASC");
